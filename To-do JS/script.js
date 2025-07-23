@@ -1,6 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
-    loadNavbar();
-});
 
 function loadNavbar() {
     const navbarContainer = document.getElementById('navbar');
@@ -24,9 +21,12 @@ function goHome() {
     window.location.href = "index.html";
 }
 
-function editTask() {
-    alert("");
-    // window.location.href = `edit-task.html?id=${taskId}`;
+function editTask(taskId) {
+    if (!taskId) {
+        alert("Task ID is missing.");
+        return;
+    }
+    window.location.href = `edit-task.html?id=${taskId}`;
 }
 
 function deleteTask() {
@@ -38,12 +38,6 @@ function deleteTask() {
     alert("Task deleted successfully!");
     window.location.href = "index.html";
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    loadNavbar();
-    initializeFormHandler();
-    loadTaskDetails(); 
-});
 
 
 function initializeDropdown() {
@@ -89,7 +83,7 @@ function initializeFormHandler() {
             uiTech: document.getElementById('uiTech').value,
             backendTech: document.querySelector('input[name="backendTech"]:checked')?.value || '',
             libraryUsed: Array.from(document.querySelectorAll('input[name="libraryUsed"]:checked')).map(cb => cb.value)
-        };
+        }; 
 
         if (!task.id || !task.date || !task.title) {
             alert("Please fill in Task ID, Date, and Title.");
@@ -148,6 +142,78 @@ function loadTaskDetails() {
         row.innerHTML = `<th>${label}</th><td>${fields[label] || "-"}</td>`;
         table.appendChild(row);
     }
+
+    const editBtn = document.getElementById("editBtn");
+    if (editBtn && taskId) {
+        editBtn.addEventListener("click", function () {
+            editTask(task.id);
+        });
+    }
+}
+
+function initializeEditHandler() {
+    const taskForm = document.getElementById('taskForm');
+    if (!taskForm) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const taskId = params.get("id");
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const task = tasks.find(t => t.id === taskId);
+
+    if (!task) {
+        alert("Task not found!");
+        return;
+    }
+
+    document.getElementById('taskId').value = task.id;
+    document.getElementById('taskDate').value = task.date;
+    document.getElementById('taskTitle').value = task.title;
+    document.getElementById('taskDesc').value = task.description;
+    document.getElementById('uiTech').value = task.uiTech;
+    
+    if (task.backendTech) {
+        const backendRadio = document.querySelector(`input[name="backendTech"][value="${task.backendTech}"]`);
+        if (backendRadio) {
+            backendRadio.checked = true;
+        }
+    }
+
+    if(Array.isArray(task.libraryUsed)) {
+        task.libraryUsed.forEach(lib => {
+            const checkbox = document.querySelector(`input[name="libraryUsed"][value="${lib}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        });
+    }
+
+    taskForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const updatedTask = {
+            id: document.getElementById('taskId').value.trim(),
+            date: document.getElementById('taskDate').value,
+            title: document.getElementById('taskTitle').value.trim(),
+            description: document.getElementById('taskDesc').value.trim(),
+            uiTech: document.getElementById('uiTech').value,
+            backendTech: document.querySelector('input[name="backendTech"]:checked')?.value || '',
+            libraryUsed: Array.from(document.querySelectorAll('input[name="libraryUsed"]:checked')).map(cb => cb.value)
+        };
+
+        const updatedTasks = tasks.map(t => t.id === taskId ? updatedTask : t);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+
+        alert("Task updated successfully!");
+        window.location.href = 'index.html';
+    });
+    const cancelBtn = document.querySelector('.cancel-btn');
+    if(cancelBtn){
+        cancelBtn.addEventListener('click',function(){
+            window.location.href = 'index.html';  
+        })
+    }
+
+
 }
 
 function goToTaskDetails(taskId) {
@@ -157,4 +223,25 @@ function goToTaskDetails(taskId) {
     }
     window.location.href = `task-details.html?id=${taskId}`;
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    loadNavbar();
+
+    if (window.location.pathname.includes("add-task.html")) {
+        initializeFormHandler();
+    }
+
+    if (window.location.pathname.includes("edit-task.html")) {
+        initializeEditHandler();
+    }
+
+    if (window.location.pathname.includes("task-details.html")) {
+        loadTaskDetails();
+    }
+
+    if (window.location.pathname.includes("index.html")) {
+        populateTaskTable();
+    }
+});
 
