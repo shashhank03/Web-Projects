@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task List</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <div id="navbar"></div>
+    <div class="container">
+        <h1>Task List with Horizontal Header</h1>
+
+        <table id="taskTable">
+            <thead>
+                <tr class="table-header">
+                    <th>Sr. No</th>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="taskList">
+            </tbody>
+        </table>
+
+        <div id="noTasksMessage" style="display: none; text-align: center; margin-top: 40px;">
+            <h3>No tasks found!</h3>
+            <p></p>
+        </div>
+    </div>
+
+    <script>
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            const taskList = document.getElementById('taskList');
+            const noTasksMessage = document.getElementById('noTasksMessage');
+
+            taskList.innerHTML = '';
+
+            if (tasks.length === 0) {
+                noTasksMessage.style.display = 'block';
+                return;
+            }
+
+            noTasksMessage.style.display = 'none';
+
+            tasks.forEach((task, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${task.id}</td>
+                    <td>${task.date}</td>
+                    <td>${task.title}</td>
+                    <td>${task.description || '-'}</td>
+                    <td class="action-buttons-cell">
+                        <button class="action-btn details-btn" onclick="goToTaskDetails('${task.id}')">Details</button>
+                        <button class="action-btn edit-btn" onclick="editTask('${task.id}')">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteTaskFromList('${task.id}')">Delete</button>
+                    </td>
+                `;
+                taskList.appendChild(row);
+            });
+        }
+
+        function goToTaskDetails(taskId) {
+            if (!taskId) {
+                alert("Task ID is missing.");
+                return;
+            }
+            window.location.href = `task-details.html?id=${taskId}`;
+        }
+
+        function editTask(taskId) {
+            alert('Edit functionality coming soon!');
+            console.log('Edit task:', taskId);
+        }
+
+        function deleteTaskFromList(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const updatedTasks = tasks.filter(task => task.id !== taskId);
+                localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+
+                loadTasks();
+
+                alert('Task deleted successfully!');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadTasks();
+        });
+
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'tasks') {
+                loadTasks();
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

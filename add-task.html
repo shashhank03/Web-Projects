@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Task</title>
+    <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>Add Task</h1>
+    </div>
+
+    <div id="navbar"></div>
+
+    <div class="add-task-box">
+        <form id="taskForm">
+            <div class="form-row">
+                <label for="taskId">Task ID</label>
+                <input type="text" id="taskId" name="taskId" />
+            </div>
+
+            <div class="form-row">
+                <label for="taskDate">Date</label>
+                <input type="date" id="taskDate" name="taskDate" />
+            </div>
+
+            <div class="form-row">
+                <label for="taskTitle">Task Title</label>
+                <input type="text" id="taskTitle" name="taskTitle" />
+            </div>
+
+            <div class="form-row">
+                <label for="taskDesc">Task Description</label>
+                <textarea id="taskDesc" name="taskDesc"></textarea>
+            </div>
+
+            <div class="form-row">
+                <label for="uiTech">UI Technology</label>
+                <select id="uiTech" name="uiTech">
+                    <option value="">Select UI Technology</option>
+                    <option value="React">React</option>
+                    <option value="Angular">Angular</option>
+                    <option value="Bootstrap">Bootstrap</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label>Backend Technology</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="backendTech" value="Python" />
+                        Python
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="backendTech" value=".NET" />
+                        .NET
+                    </label>
+                    <label>
+                        <input type="radio" name="backendTech" value="PHP" />
+                        PHP
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>Library Used</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="checkbox" name="libraryUsed" value="Redux" />
+                        Redux
+                    </label>
+                    <label class="radio-option">
+                        <input type="checkbox" name="libraryUsed" value="Saga" />
+                        Saga
+                    </label>
+                    <label class="radio-option">
+                        <input type="checkbox" name="libraryUsed" value="NumPy" />
+                        NumPy
+                    </label>
+                    <label class="radio-option">
+                        <input type="checkbox" name="libraryUsed" value="Pandas" />
+                        Pandas
+                    </label>
+                </div>
+            </div>
+
+
+            <div class="buttons-row">
+                <button type="submit" class="add-task-btn">Add Task</button>
+                <button type="reset" class="reset-btn">Reset</button>
+                <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
