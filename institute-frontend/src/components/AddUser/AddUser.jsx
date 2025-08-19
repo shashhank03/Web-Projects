@@ -1,26 +1,24 @@
 import React, { useState } from 'react'
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import axios from '../../utils/axiosConfig';
 
-function AddStudent() {
+function AddUser({ setOpenAddUserPopup, role }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
     const [phoneNumber,setPhoneNumber] = useState('');
+    const [userRole, setUserRole] = useState(role);
     const [gender,setGender] = useState('');
     const [dateOfBirth,setDateOfBirth] = useState('');
-    const [role,setRole] = useState('Student');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
-    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
         setError('');
         setMessage('');
         try {
-            const res = await axios.post('http://localhost:5000/api/users/register', {
+            const res = await axios.post('/api/users/register', {
                 first_name: firstName,
                 last_name: lastName,
                 email,
@@ -28,18 +26,21 @@ function AddStudent() {
                 phone_number: phoneNumber,
                 gender,
                 date_of_birth: dateOfBirth || null,
-                role
+                role: userRole
             });
-        setMessage('Registration successful');
-        setError('');
-        navigate('/students');
+            setMessage('Registration successful');
+            setError('');
+            if (setOpenAddUserPopup) {
+                setOpenAddUserPopup(false);
+            }
+            window.location.reload();
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
             setMessage('');
         }
     };
     return (
-        <div className='flex justify-center'>
+        <div className='flex flex-col'>
             <div className='flex justify-center gap-4 mb-6'>
                     <form onSubmit={handleRegister} className="space-y-4">
                         <div className='flex items-center space-x-4 mb-4'>
@@ -117,16 +118,16 @@ function AddStudent() {
                         </div>  
                         <div className='flex items-center space-x-4 mb-4'>  
                         <label className="block text-sm font-semibold w-32" htmlFor='role'>Role:</label>  
-                        <select 
-                            className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-3 transition-colors duration-200" 
-                            value={role} 
-                            onChange={(e) => setRole(e.target.value)}
+                        <select
+                            className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-3 transition-colors duration-200"
+                            value={userRole}
+                            onChange={(e) => setUserRole(e.target.value)} 
                         >
                             <option value="Student">Student</option>
-                            <option value="Admin">Admin</option>
+                            <option value="Staff">Staff</option>
                         </select>
                         </div>
-                        <div className='flex justify-center gap-4 mb-6'>
+                        <div className='flex justify-center gap-4 mb-2'>
                         <button
                             type="submit"
                             className="bg-orange-700 hover:bg-orange-800 text-white px-4 py-2 rounded"
@@ -134,9 +135,9 @@ function AddStudent() {
                             Register
                         </button>
                         <button
-                            type="cancel"
+                            type="button"
                             className="bg-white outline outline-orange-700 hover:bg-gray-300 text-orange-700 px-4 py-2 rounded"
-                            onClick={() => navigate('/')}
+                            onClick={() => setOpenAddUserPopup(false)}
                         >
                             Cancel
                         </button>
@@ -147,4 +148,4 @@ function AddStudent() {
     )
 }
 
-export default AddStudent
+export default AddUser

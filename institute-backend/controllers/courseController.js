@@ -31,4 +31,45 @@ const addCourse = async (req, res) => {
   }
 };
 
-module.exports = { getCourseDetails, addCourse };
+const updateCourse = async (req, res) => {
+  const { id } = req.params;
+  const { course_name, course_code, description, duration, start_date } = req.body;
+  
+  try {
+    const [result] = await pool.execute(
+      'UPDATE course SET course_name = ?, course_code = ?, description = ?, duration = ?, start_date = ? WHERE id = ?',
+      [course_name, course_code, description, duration, start_date, id]
+    );
+    
+    if (result.affectedRows > 0) {
+      res.json({ message: 'Course updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Course not found' });
+    }
+  } catch (error) {
+    console.error('Update error:', error);
+    res.status(500).json({ message: 'Error updating course', error: error.message });
+  }
+};
+
+const deleteCourse = async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    await pool.execute('DELETE FROM enrollment WHERE course_id = ?', [id]);
+    await pool.execute('DELETE FROM course_instructors WHERE course_id = ?', [id]);
+
+    const [result] = await pool.execute('DELETE FROM course WHERE id = ?', [id]);
+    
+    if (result.affectedRows > 0) {
+      res.json({ message: 'Course deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Course not found' });
+    }
+  } catch (error) {
+    console.error('Delete error:', error);
+    res.status(500).json({ message: 'Failed to delete course', error: error.message });
+  }
+};
+
+module.exports = { getCourseDetails, addCourse, updateCourse, deleteCourse };

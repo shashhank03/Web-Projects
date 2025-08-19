@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
@@ -20,7 +20,7 @@ const Register = () => {
     setError('');
     setMessage('');
     try {
-      const res = await axios.post('http://localhost:5000/api/users/register', {
+      const res = await axios.post('/api/users/register', {
         first_name: firstName,
         last_name: lastName,
         email,

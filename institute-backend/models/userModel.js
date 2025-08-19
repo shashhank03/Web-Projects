@@ -30,4 +30,54 @@ const getUserDetails = async (userId) => {
   return user[0];
 };
 
-module.exports = { findUserByEmail, createUser, getUserDetails };
+const updateUserDetails = async (userId, user) => {
+  const [result] = await pool.execute(
+    `UPDATE users u SET u.first_name = ?, u.last_name = ?, u.email = ?, u.phone_number = ?, u.gender = ?, u.date_of_birth = ?  WHERE u.id = ?;`, 
+    [user.first_name, user.last_name, user.email, user.phone_number, user.gender, user.date_of_birth, userId]
+  );
+  return result.affectedRows > 0;
+};
+
+const updateUserAddress = async (userId, address) => {
+  const [result] = await pool.execute(
+    `INSERT INTO address (user_id, street, city, state, pin_code, country) VALUES (?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE street = ?, city = ?, state = ?, pin_code = ?, country = ?;`, 
+    [userId, address.street, address.city, address.state, address.pin_code, address.country, address.street, address.city, address.state, address.pin_code, address.country]
+  );
+  return result.affectedRows > 0;
+};
+
+const addCoursesToStudent = async (userId, courseIds, status) => {
+  try {
+    const enrollmentPromises = courseIds.map(courseId => {
+      return pool.execute(
+        'INSERT INTO enrollment (student_id, course_id, status) VALUES (?, ?, ?)',
+        [userId, parseInt(courseId), status]
+      );
+    });
+    
+    const results = await Promise.all(enrollmentPromises);
+    return results.every(result => result[0].affectedRows > 0);
+  } catch (error) {
+    console.error('Database error:', error);
+    throw error;
+  }
+};
+
+const addCoursesToStaff = async (staffId, courseIds) => {
+  try {
+    const courseInstructorPromises = courseIds.map(courseId => {
+      return pool.execute(
+        'INSERT INTO course_instructors (staff_id, course_id) VALUES (?, ?)',
+        [staffId, parseInt(courseId)]
+      );
+    });
+    
+    const results = await Promise.all(courseInstructorPromises);
+    return results.every(result => result[0].affectedRows > 0);
+  } catch (error) {
+    console.error('Database error:', error);
+    throw error;
+  }
+};
+module.exports = { findUserByEmail, createUser, getUserDetails, updateUserDetails, updateUserAddress, addCoursesToStudent, addCoursesToStaff };

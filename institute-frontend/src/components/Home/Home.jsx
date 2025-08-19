@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../utils/axiosConfig';
+import { useAuth } from '../Context/AuthContext';
 
 export default function Home() {
     const [stats, setStats] = useState({
@@ -8,8 +9,10 @@ export default function Home() {
         staff: 0,
         courses: 0
     });
+    const { isAuthenticated } = useAuth();
 
     useEffect(() => {
+        
         const fetchStats = async () => {
             try {
                 const [studentsRes, staffRes, coursesRes] = await Promise.all([
@@ -24,21 +27,24 @@ export default function Home() {
                 });
             } catch (error) {
                 console.error('Error fetching stats:', error);
+                setStats({ students: 0, staff: 0, courses: 0 });
             }
         };
-        fetchStats();
-    }, []);
+
+        if (isAuthenticated) {
+            fetchStats();
+        }
+    }, [isAuthenticated]);
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <div className="bg-gradient-to-r from-gray-100 to-gray-600 text-black py-20">
-                <div className="container mx-auto px-6 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-4">
-                        Institute Management System
-                    </h1>
-                    <p className="text-xl md:text-2xl mb-8">
-                        
-                    </p>
+            <div className="bg-cover text-white py-30" style={{ backgroundImage: `url('https://hips.hearstapps.com/hmg-prod/images/berry-college-historic-campus-at-twilight-royalty-free-image-1652127954.jpg')` }}>
+                <div className="bg-gradient-to-l from-gray-900 to-transparent bg-opacity-40 py-15">
+                    <div className="container mx-auto px-6 text-center">
+                        <h1 className="text-4xl md:text-6xl font-bold mb-4">
+                            Institute Management System
+                        </h1>
+                    </div>
                 </div>
             </div>
 
@@ -90,3 +96,19 @@ export default function Home() {
         </div>
     );
 }
+
+
+{/* <div className='flex justify-center gap-4'>
+                        <button
+                            onClick={() => setOpenStudentPopup(true)}
+                            className="text-white bg-orange-700 hover:bg-orange-800 rounded-lg px-4 py-2.5 mb-2"
+                        >
+                            Edit Details
+                        </button>
+                        <button
+                            onClick={() => setOpenStudentPopup(true)}
+                            className="text-white bg-orange-700 hover:bg-orange-800 rounded-lg px-4 py-2.5 mb-2"
+                        >
+                            Add Address
+                        </button>
+                    </div> */}

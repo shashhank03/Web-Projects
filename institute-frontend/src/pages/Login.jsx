@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../components/Context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,17 +17,14 @@ const Login = () => {
     setError('');
     setMessage('');
     try {
-      const res = await axios.post('http://localhost:5000/api/users/login', {
+      const res = await axios.post('/api/users/login', {
         email,
         password
       });
 
       setMessage('Login successful');
-      console.log(res.data);
-      setError('');
       const { token, user } = res.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      login(token, user);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

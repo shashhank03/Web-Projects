@@ -1,43 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import AddStudent from '../AddUser/AddStudent';
+import axios from '../../utils/axiosConfig';
+import AddUser from '../AddUser/AddUser';
+import EditUser from '../AddUser/EditUser';
+import Modal from '../modal/modal';
+import { useAuth } from '../Context/AuthContext';
 
 const StudentDetails = () => {
   const [students, setStudents] = useState([]);
-  const [openStudentPopup, setOpenStudentPopup]=useState(false);
+  const [openAddUserPopup, setOpenAddUserPopup] = useState(false);
+  const [openEditUserPopup, setOpenEditUserPopup] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/students')
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = () => {
+    axios.get('/api/students')
       .then(res => setStudents(res.data))
       .catch(err => console.error(err));
-  }, []);
+  };
+
+  const handleDelete = async (studentId) => {
+    if (window.confirm('Are you sure you want to delete this student?')) {
+      try {
+        await axios.delete(`/api/students/${studentId}`);
+        setStudents(students.filter(student => student.id !== studentId));
+        alert('Student deleted successfully');
+      } catch (err) {
+        console.error('Delete error:', err);
+        alert('Failed to delete student');
+      }
+    }
+  };
+
+  const handleEdit = (student) => {
+    setSelectedStudent(student);
+    setOpenEditUserPopup(true);
+  };
+
   return (
     <div className='flex flex-col min-h-screen'>
-      <div className='flex justify-between items-center mb-4 mt-8'>
-        <div></div>
-          <h2 className="text-2xl font-bold">Student Details</h2>
+      {user.role==='Admin' ?(<div className='flex justify-between items-center mb-4 mt-8'>
+          <div></div>
+          <h2 className="text-2xl font-bold">Students</h2>
             <button
-              onClick={() => setOpenStudentPopup(true)}
-              className="text-white bg-orange-700 hover:bg-orange-800 rounded-lg px-4 py-3"
+              onClick={() => setOpenAddUserPopup(true)}
+              className="text-white bg-red-700 hover:bg-red-800 rounded-lg px-4 py-3"
             >
               Add Student
             </button>
-      </div>
-      {   
-        openStudentPopup && 
-          <div className='fixed inset-0 bg-gray-400 bg-opacity-10 flex justify-center items-center z-50'>
-            <div className='rounded-lg shadow-xl p-8 bg-white max-w-md w-full mx-4 relative'>
-              <h2 className='text-2xl font-medium mb-6 text-center'>Add Student</h2>
-                <button 
-                  className='absolute top-4 right-4 outline outline-red-600 text-red-600 hover:text-white bg-white hover:bg-red-700 font-medium rounded-lg text-sm px-1.5 py-0.9'
-                  onClick={() => setOpenStudentPopup(false)}
-                >X
-                  </button>
-                  <AddStudent/>
-            </div>
-          </div>
-      }
-      <div className="overflow-x-auto">
+      </div>):(<div className='flex justify-between items-center mb-4 mt-8'>
+          <div></div>
+          <h2 className="text-2xl font-bold">Students</h2>
+          <div></div>
+      </div>)}
+      <div className=" overflow-x-auto ">
         <table className="min-w-full border border-gray-300">
           <thead className="bg-gray-300">
             <tr>
@@ -48,6 +67,7 @@ const StudentDetails = () => {
               <th className="border px-4 py-2 ">DOB</th>
               <th className="border px-4 py-2 ">Address</th>
               <th className="border px-4 py-2 ">Courses</th>
+              {user.role==='Admin' && (<th className="border px-4 py-2 ">Actions</th>)}
             </tr>
           </thead>
           <tbody>
@@ -63,16 +83,48 @@ const StudentDetails = () => {
                   {student.date_of_birth?.split("T")[0]}
                 </td>
                 <td className="border px-4 py-2">
-                  {student.street}, {student.city}, {student.state} -{" "}
-                  {student.pin_code}, {student.country}
+                  {student.pin_code !== null 
+                    ? `${student.street}, ${student.city}, ${student.state} - ${student.pin_code}, ${student.country}`
+                    : 'No Address Available'
+                  }
                 </td>
-                <td className="border px-4 py-2">{student.courses}</td>
+                <td className="border px-4 py-2">{student.courses || '-'}</td>
+                {user.role==='Admin' && (
+                  <td className="border px-4 py-2">
+                    <div className="flex gap-2">
+                      <button
+                        className="bg-blue-500 hover:bg-blue-800 text-white px-2 py-2 material-icons rounded-full"
+                        onClick={() => handleEdit(student)}
+                        title="Edit Student"
+                      >
+                        &#xe3c9;
+                      </button>
+                      <button
+                      className="bg-red-700 hover:bg-red-800 text-white px-2 py-2 material-icons rounded-full"
+                      onClick={() => handleDelete(student.id)}
+                      title="Delete Student"
+                    >
+                      &#xe872;
+                    </button>
+                  </div>
+                </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
+      <Modal isOpenState={openAddUserPopup} onClose={() => setOpenAddUserPopup(false)}>
+        <h2 className='text-2xl font-medium mb-6 text-center'>Add Student</h2>
+        <AddUser setOpenAddUserPopup={setOpenAddUserPopup} role='Student' />
+      </Modal>
+      <Modal isOpenState={openEditUserPopup} onClose={() => setOpenEditUserPopup(false)}>
+        <EditUser 
+          setEditUserPopup={setOpenEditUserPopup} 
+          userToEdit={selectedStudent}
+          onUpdate={fetchStudents}
+        />
+      </Modal>
     </div>
   );
 };
