@@ -28,6 +28,7 @@ function AddCourse({ setOpenCoursePopup }) {
             setMessage('Course added successfully');
             setError('');
             console.log(res.data);
+            window.location.reload();
             if (setOpenCoursePopup) {
                 setOpenCoursePopup(false);
             }

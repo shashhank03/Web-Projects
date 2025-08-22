@@ -3,7 +3,7 @@ const router = express.Router();
 const { getStudentDetails, addStudent, updateStudent, deleteStudent, getStudentCourses, enrollStudent } = require('../controllers/studentController');
 const { authenticateUser, authorizeAdmin } = require('../middleware/authMiddleware');
 
-router.get('/', getStudentDetails);
+router.get('/', authenticateUser, getStudentDetails);
 router.post('/add', authenticateUser, authorizeAdmin, addStudent);
 router.put('/:id', authenticateUser, authorizeAdmin, updateStudent);
 router.put('/self/:id', authenticateUser, updateStudent);

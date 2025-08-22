@@ -5,6 +5,7 @@ import { useAuth } from '../Context/AuthContext';
 export default function Header() {
     const navigate = useNavigate();
     const { isAuthenticated, logout } = useAuth();
+    const { user } = useAuth();
 
     const handleLogout = () => {
         logout();
@@ -12,7 +13,7 @@ export default function Header() {
     };
 
     return (
-        <header className="shadow-lg sticky z-5 top-0">
+        <header className="shadow-lg z-5 top-0 min-w-full">
             <nav className="bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5">
                 <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-2xl">
                     <Link to="/" className="flex items-center">
@@ -33,11 +34,16 @@ export default function Header() {
                                     Logout
                                 </button>
                                 <Link to="/profile" className="flex items-center">
+                                    <button className="flex items-center bg-gray-100 rounded-full overflow-hidden transition-all duration-1000  hover:bg-gray-200 group">
                                     <img
                                         src="https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
-                                        className="mr-3 h-12 rounded-full"
+                                        className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-105"
                                         alt="Profile"
                                     />
+                                    <span className="ml-2 text-gray-700 max-w-0 opacity-0 transition-all duration-1000 group-hover:max-w-xl pr-4 group-hover:opacity-100 whitespace-nowrap">
+                                        {user.first_name}
+                                    </span>
+                                    </button>
                                 </Link>
                             </>
                         ) : (

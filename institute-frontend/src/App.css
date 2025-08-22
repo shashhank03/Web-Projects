@@ -40,3 +40,17 @@
 .read-the-docs {
   color: #888;
 }
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+
+}

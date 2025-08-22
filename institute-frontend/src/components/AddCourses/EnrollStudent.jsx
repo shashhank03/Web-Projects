@@ -10,6 +10,8 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const { user } = useAuth();
+    const student = students.find(s => s.user_id === user.id);
+
 
     useEffect(() => {
         axios.get('http://localhost:5000/api/students')
@@ -22,6 +24,12 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
           .then(res => setCourses(res.data))
           .catch(err => console.error(err));
     }, []);
+
+    useEffect(() => {
+        if (user.role !== 'Admin') {
+            setStudentID(user.id || user.user_id);
+        }
+    }, [user]);
 
     const handleEnroll = async (e) => {
         e.preventDefault();
@@ -36,6 +44,7 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
             });
             setMessage('Student enrolled successfully');
             setError('');
+            window.location.reload();
             if (setOpenEnrollPopup) {
                 setOpenEnrollPopup(false);
             }
@@ -52,9 +61,10 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
             <h2 className='text-2xl font-medium mb-6 text-center'>Enroll Student</h2>
             <div className='flex justify-center gap-4 mb-6'>
                 <form onSubmit={handleEnroll} className="space-y-4">
+                    
                     <div className='flex items-center space-x-4 mb-4'>
                         <label className="block text-sm font-semibold w-32" htmlFor='student'>Student:</label>
-                        {user. role === 'Admin' ? (<select 
+                        {user.role === 'Admin' ? (<select 
                             className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-3 transition-colors duration-200"
                             value={studentID || ''}
                             onChange={(e) => setStudentID(e.target.value)}
@@ -68,11 +78,11 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
                             ))}
                         </select>):(
                             <input
-                                type="text"
-                                className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-3 transition-colors duration-200"
-                                value={user.first_name + ' ' + user.last_name}
-                                disabled
-                            />
+                            type="text"
+                            className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-3 transition-colors duration-200"
+                            value={student ? `${student.first_name} ${student.last_name}` : ''}
+                            disabled
+                        />
                         )}
                     </div>
                     <div className='flex items-center space-x-4 mb-4'>
@@ -113,7 +123,7 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
                             Enroll
                         </button>
                         <button
-                            type="cancel"
+                            type="button"
                             className="bg-white outline outline-orange-700 hover:bg-gray-300 text-orange-700 px-4 py-2 rounded"
                             onClick={() => setOpenEnrollPopup(false)}
                         >   

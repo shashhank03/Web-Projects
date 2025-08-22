@@ -9,6 +9,6 @@ router.put('/:id', authenticateUser, authorizeAdmin, updateStaff);
 router.put('/self/:id', authenticateUser, updateStaff);
 router.delete('/:id', authenticateUser, authorizeAdmin, deleteStaff);
 router.get('/get-courses', authenticateUser, getStaffCourses);
-router.post('/add-courses', authenticateUser, authorizeAdmin, assignCoursesToStaff);
+router.post('/add-courses', authenticateUser, assignCoursesToStaff);
 
 module.exports = router;

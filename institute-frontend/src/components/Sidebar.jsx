@@ -21,7 +21,7 @@ function Sidebar() {
   const location = useLocation();
 
   return (
-    <aside className="fixed left-0 top-16 h-screen w-1/6 p-4 pt-12  border-r border-gray-200 bg-gray-800 text-white">
+    <aside className="fixed left-0 top-16 h-screen w-1/7 p-4 pt-12  border-r border-gray-200 bg-gray-800 text-white">
       {/* <div className="mb-4">
         <input
           type="search"

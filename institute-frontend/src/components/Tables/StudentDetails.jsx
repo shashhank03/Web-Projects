@@ -101,7 +101,7 @@ const StudentDetails = () => {
                       </button>
                       <button
                       className="bg-red-700 hover:bg-red-800 text-white px-2 py-2 material-icons rounded-full"
-                      onClick={() => handleDelete(student.id)}
+                      onClick={() => handleDelete(student.user_id)}
                       title="Delete Student"
                     >
                       &#xe872;
