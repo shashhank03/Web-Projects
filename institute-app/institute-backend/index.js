@@ -28,6 +28,6 @@ app.get('/api', (req, res) => {
   res.send('✅ Institute backend is running');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server started on http://localhost:${PORT}`);
 });
