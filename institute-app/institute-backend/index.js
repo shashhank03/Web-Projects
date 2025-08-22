@@ -15,6 +15,9 @@ const staffRoutes = require('./routes/staffRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 
+app.get('/', (req, res) => {
+  res.send('✅ Institute backend is running');
+});
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/staff', staffRoutes);
