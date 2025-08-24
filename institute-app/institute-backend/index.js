@@ -18,6 +18,18 @@ const attendanceRoutes = require('./routes/attendanceRoutes');
 app.get('/', (req, res) => {
   res.send('✅ Institute backend is running');
 });
+
+app.get("/api/debug-env", (req, res) => {
+  res.json({
+    DB_HOST: process.env.DB_HOST,
+    DB_USER: process.env.DB_USER,
+    DB_NAME: process.env.DB_NAME,
+    DB_PORT: process.env.DB_PORT,
+    NODE_ENV: process.env.NODE_ENV,
+  });
+});
+
+
 app.use('/api/users', userRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/staff', staffRoutes);
