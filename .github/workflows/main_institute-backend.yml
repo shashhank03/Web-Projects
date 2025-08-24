@@ -24,6 +24,7 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
+        working-directory: institute-app/institute-backend
         run: |
           npm install
           npm run build --if-present
@@ -33,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: institute-app/institute-backend
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,5 +52,6 @@ jobs:
         with:
           app-name: 'institute-backend'
           slot-name: 'Production'
-          package: .
+          package: institute-app/institute-backend
+
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_903B12CA433F4D739CE89E983A56D7BF }}
