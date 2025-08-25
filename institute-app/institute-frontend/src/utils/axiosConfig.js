@@ -4,7 +4,7 @@ const instance = axios.create({
   baseURL: "https://institute-backend.azurewebsites.net",
 });
 
-axios.interceptors.request.use(
+instance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -17,4 +17,4 @@ axios.interceptors.request.use(
     }
 );
 
-export default axios;
+export default instance;
