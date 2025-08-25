@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-
+const instance = axios.create({
+  baseURL: "https://institute-backend.azurewebsites.net",
+});
 
 axios.interceptors.request.use(
     (config) => {
