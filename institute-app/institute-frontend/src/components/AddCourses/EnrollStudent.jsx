@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios';
+import axios from '../../utils/axiosConfig';
 import { useAuth } from '../Context/AuthContext';
 
 function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
@@ -14,13 +14,13 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
 
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/students')
+        axios.get('/api/students')
           .then(res => setStudents(res.data))
           .catch(err => console.error(err));
     }, []);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/courses')
+        axios.get('/api/courses')
           .then(res => setCourses(res.data))
           .catch(err => console.error(err));
     }, []);

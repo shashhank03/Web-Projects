@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from '../../utils/axiosConfig';
 
-
 function AddAddress({ setOpenAddressPopup, addressToEdit }) {
     const [street, setStreet] = useState('');
     const [city, setCity] = useState(''); 
