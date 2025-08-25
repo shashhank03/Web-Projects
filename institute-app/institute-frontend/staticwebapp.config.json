@@ -2,6 +2,7 @@
   "routes": [
     {
       "route": "/api/*",
+      "allowedRoles": ["anonymous"],
       "rewrite": "https://institute-backend.azurewebsites.net/api/*"
     }
   ]
