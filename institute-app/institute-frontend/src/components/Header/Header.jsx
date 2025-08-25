@@ -17,12 +17,10 @@ export default function Header() {
             <nav className="bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5">
                 <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-2xl">
                     <Link to="/" className="flex items-center">
-                        <img
-                            src="https://www.vhv.rs/dpng/d/426-4262188_icon-students-red-education-icon-png-transparent-png.png"
-                            className="mr-3 h-12 rounded-full"
-                            alt="Logo"
-                        />
-                        <h2 className='text-2xl font-bold text-center'>Institute Management</h2>
+                        <span className="material-symbols-outlined bg-red-600 hover:bg-red-700 w-11 h-11 flex items-center pt-0.5 rounded-full">
+                            school
+                        </span>
+                        <h2 className='text-2xl font-bold text-center ml-2'>Institute Management</h2>
                     </Link>
                     <div className="flex items-center lg:order-2">
                         {isAuthenticated ? (
