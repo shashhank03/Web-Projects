@@ -6,7 +6,6 @@ function EditCourse({ setEditCoursePopup, courseToEdit, onUpdate }) {
     const [courseCode, setCourseCode] = useState('');
     const [description, setDescription] = useState('');
     const [duration, setDuration] = useState('');
-    const [startDate, setStartDate] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
@@ -16,7 +15,6 @@ function EditCourse({ setEditCoursePopup, courseToEdit, onUpdate }) {
             setCourseCode(courseToEdit.course_code || '');
             setDescription(courseToEdit.description || '');
             setDuration(courseToEdit.duration || '');
-            setStartDate(courseToEdit.start_date?.split('T')[0] || '');
         }
     }, [courseToEdit]);
 
@@ -24,14 +22,12 @@ function EditCourse({ setEditCoursePopup, courseToEdit, onUpdate }) {
         e.preventDefault();
         setError('');
         setMessage('');
-
         try {
             const res = await axios.put(`/api/courses/${courseToEdit.id}`, {
                 course_name: courseName,
                 course_code: courseCode,
                 description,
-                duration,
-                start_date: startDate
+                duration
             });
             setMessage('Course updated successfully');
             setError('');
@@ -89,16 +85,6 @@ function EditCourse({ setEditCoursePopup, courseToEdit, onUpdate }) {
                             value={duration}
                             placeholder='Duration in Hours'
                             onChange={(e) => setDuration(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className='flex items-center space-x-4 mb-4'>
-                        <label className="block text-sm font-semibold w-32" htmlFor='startDate'>Start Date:</label>
-                        <input
-                            type="date"
-                            className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-5 transition-colors duration-200"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
                             required
                         />
                     </div>

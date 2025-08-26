@@ -57,10 +57,7 @@ function AdminStaffCard() {
         </button>
       </div>
 
-      <Modal
-        isOpenState={openInstructerPopup}
-        onClose={() => setOpenInstructerPopup(false)}
-      >
+      <Modal isOpenState={openInstructerPopup} onClose={() => setOpenInstructerPopup(false)}>
         <AddInstructer
           setOpenInstructerPopup={setOpenInstructerPopup}
           staffID={staffID}

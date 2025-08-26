@@ -1,17 +1,18 @@
+
 import React, { useState, useEffect } from 'react'
 import axios from '../../utils/axiosConfig';
 import { useAuth } from '../Context/AuthContext';
 
 function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
     const [students, setStudents] = useState([]);
-    const [courses, setCourses] = useState([]);
-    const [selectedCourses, setSelectedCourses] = useState('');
+    const [batches, setBatches] = useState([]);
+    const [selectedBatch, setSelectedBatch] = useState('');
     const [status, setStatus] = useState('enrolled'); 
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const { user } = useAuth();
     const student = students.find(s => s.user_id === user.id);
-
+    const batch = batches.find(b => b.id === parseInt(selectedBatch));
 
     useEffect(() => {
         axios.get('/api/students')
@@ -20,8 +21,8 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
     }, []);
 
     useEffect(() => {
-        axios.get('/api/courses')
-          .then(res => setCourses(res.data))
+        axios.get('/api/batch')
+          .then(res => setBatches(res.data))
           .catch(err => console.error(err));
     }, []);
 
@@ -35,11 +36,11 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
         e.preventDefault();
         setError('');
         setMessage('');
-
         try{
-            const res = await axios.post('/api/students/add-courses', {
+            await axios.post('/api/students/enroll', {
                 student_id: studentID,
-                course_id: selectedCourses,
+                batch_id: selectedBatch,
+                course_id: batch?.course_id,
                 status: status
             });
             setMessage('Student enrolled successfully');
@@ -86,17 +87,17 @@ function EnrollStudent({ setOpenEnrollPopup, studentID, setStudentID }) {
                         )}
                     </div>
                     <div className='flex items-center space-x-4 mb-4'>
-                        <label className="block text-sm font-semibold w-32" htmlFor='course'>Course:</label>
+                        <label className="block text-sm font-semibold w-32" htmlFor='batch'>Batch:</label>
                         <select 
                             className="flex-1 bg-gray-100 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none py-2 px-3 transition-colors duration-200"
-                            value={selectedCourses}
-                            onChange={(e) => setSelectedCourses(e.target.value)}
+                            value={selectedBatch}
+                            onChange={(e) => setSelectedBatch(e.target.value)}
                             required
                         >  
-                            <option value="">Select Course</option>
-                            {courses.map((course) => (
-                                <option key={course.id} value={course.id}>
-                                    {course.course_name}
+                            <option value="">Select Batch</option>
+                            {batches.map((batch) => (
+                                <option key={batch.id} value={batch.id}>
+                                    {batch.name} ({batch.status})
                                 </option>
                             ))}
                         </select>

@@ -47,15 +47,15 @@ const updateUserAddress = async (userId, address) => {
   return result.affectedRows > 0;
 };
 
-const addCoursesToStudent = async (userId, courseIds, status) => {
+const addBatchesToStudent = async (userId, batchIds, status = 'enrolled') => {
   try {
-    const enrollmentPromises = courseIds.map(courseId => {
+    const enrollmentPromises = batchIds.map(batchId => {
       return pool.execute(
-        'INSERT INTO enrollment (student_id, course_id, status) VALUES (?, ?, ?)',
-        [userId, parseInt(courseId), status]
+        'INSERT INTO enrollment (student_id, batch_id, status) VALUES (?, ?, ?)',
+        [userId, parseInt(batchId), status]
       );
     });
-    
+
     const results = await Promise.all(enrollmentPromises);
     return results.every(result => result[0].affectedRows > 0);
   } catch (error) {
@@ -80,4 +80,4 @@ const addCoursesToStaff = async (staffId, courseIds) => {
     throw error;
   }
 };
-module.exports = { findUserByEmail, createUser, getUserDetails, updateUserDetails, updateUserAddress, addCoursesToStudent, addCoursesToStaff };
+module.exports = { findUserByEmail, createUser, getUserDetails, updateUserDetails, updateUserAddress, addBatchesToStudent, addCoursesToStaff };

@@ -10,5 +10,6 @@ router.put('/self/:id', authenticateUser, updateStudent);
 router.delete('/:id', authenticateUser, authorizeAdmin, deleteStudent);
 router.get('/get-courses', authenticateUser, getStudentCourses);
 router.post('/add-courses', authenticateUser, enrollStudent);
+router.post('/enroll', authenticateUser, enrollStudent);
 
 module.exports = router;

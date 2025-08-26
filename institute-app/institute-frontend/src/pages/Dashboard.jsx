@@ -11,6 +11,9 @@ import { useAuth } from '../components/Context/AuthContext';
 import AttendanceChart from '../components/Charts/AttendanceChart';
 import AdminStudentCard from '../components/Cards/AdminStudent';
 import AdminStaffCard from '../components/Cards/AdminStaffCard';
+import BatchList from '../components/BatchList';
+import BatchCard from '../components/Cards/BatchCard';
+
 
 function Dashboard() {
     
@@ -18,8 +21,8 @@ function Dashboard() {
     return (
         <>
         <h1 className='text-center text-2xl sm:text-5xl py-10 font-sans md:font-serif'>{user.role} Dashboard</h1>
-        <div className='flex justify-center gap-8 w-full pl-20 pr-20'>
-            <div className='flex flex-col gap-6 w-1/2'>
+        <div className='flex justify-center gap-8 w-full pl-10 pr-10'>
+            <div className='flex flex-col gap-6 w-3/5'>
                 {user.role === 'Student' && (<div className='max-w-2xl bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-8'>
                     <StudentCard />
                 </div>)}
@@ -33,16 +36,30 @@ function Dashboard() {
                     <div className='max-w-2xl bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-8'>
                     <AdminCard />
                     </div>
+                    <div className='max-w-2xl bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-6'>
+                    <BatchCard />
+                    </div>
+                </>
+                )}
+            </div>
+
+            <div className='max-w-2xl w-2/5'>
+                <div className='flex flex-col gap-6'>
+                {user.role !== 'Admin' && (<div className='max-w-2xl bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-8'>
+                    <AttendanceChart />
+                </div>)}
+
+                {user.role === 'Admin' && (
+                <>
+                    <div className='max-w-2xl bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-8'>
+                    <AdminStudentCard />
+                    </div>
                     <div className='max-w-2xl bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-8'>
                     <AdminStaffCard />
                     </div>
                 </>
                 )}
             </div>
-
-            <div className='max-w-2xl w-1/2 bg-white hover:bg-gray-50 hover:shadow-2xl rounded-2xl h-fit shadow-lg p-8'>
-                {user.role !== 'Admin' && <AttendanceChart />}
-                {user.role === 'Admin' && <AdminStudentCard />}
             </div>
         </div>
         </>

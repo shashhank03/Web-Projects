@@ -57,34 +57,53 @@ const addStudent = async (req, res) => {
 const getStudentCourses = async (req, res) => {
   try {
     const [courses] = await pool.execute(`
-      SELECT c.course_name, c.course_code, e.status FROM course c
-      JOIN enrollment e ON c.id = e.course_id WHERE e.student_id = ?
+      SELECT c.course_name, c.course_code, b.name AS batch_name, e.status
+      FROM enrollment e
+      JOIN batch b ON e.batch_id = b.id
+      JOIN course c ON b.course_id = c.id
+      WHERE e.student_id = ?
     `, [req.user.id]);
     res.json(courses);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error fetching student courses' });
+    res.status(500).json({ message: 'Error fetching student courses', error: error.message });
   }
 };
 
 const enrollStudent = async (req, res) => {
-  const { student_id, course_id, status = 'enrolled' } = req.body;
-  
+  const { student_id, batch_id, status = 'enrolled' } = req.body;
+
+  if (!student_id || !batch_id) {
+    return res.status(400).json({ message: 'Missing student_id or batch_id' });
+  }
+
   try {
-    const courseIds = Array.isArray(course_id) ? course_id : [course_id];
-    
-    const result = await addCoursesToStudent(student_id, courseIds, status);
-    
-    if (result) {
-      res.status(201).json({ message: 'Student enrolled successfully' });
-    } else {
-      res.status(400).json({ message: 'Enrollment failed' });
+    const [batchRows] = await pool.execute(
+      `SELECT course_id FROM batch WHERE id = ?`,
+      [batch_id]
+    );
+
+    if (batchRows.length === 0) {
+      return res.status(404).json({ message: 'Batch not found' });
     }
+
+    const course_id = batchRows[0].course_id;
+
+    const [result] = await pool.execute(
+      `INSERT INTO enrollment (student_id, batch_id, course_id, status) VALUES (?, ?, ?, ?)`,
+      [student_id, batch_id, course_id, status]
+    );
+
+    res.status(201).json({ 
+      message: 'Student enrolled in batch successfully', 
+      enrollmentId: result.insertId 
+    });
   } catch (error) {
     console.error('Enrollment error:', error);
-    res.status(500).json({ message: 'Error enrolling student', error: error.message });
+    res.status(500).json({ message: 'Error enrolling student in batch', error: error.message });
   }
 };
+
 
 const deleteStudent = async (req, res) => {
   const { id } = req.params;

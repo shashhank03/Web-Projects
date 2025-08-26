@@ -14,6 +14,7 @@ const studentRoutes = require('./routes/studentRoutes');
 const staffRoutes = require('./routes/staffRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
+const batchRoutes = require('./routes/batchRoutes');
 
 app.get('/', (req, res) => {
   res.send('✅ Institute backend is running');
@@ -35,6 +36,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/api/batch', batchRoutes);
 
 app.get('/api', (req, res) => {
   res.send('✅ Institute backend is running');

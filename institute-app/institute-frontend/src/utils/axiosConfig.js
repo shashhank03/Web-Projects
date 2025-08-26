@@ -1,7 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
+
 
 const instance = axios.create({
-  baseURL: "https://institute-backend.azurewebsites.net",
+    baseURL: import.meta.env.DEV 
+    ? "http://localhost:5173"
+    : "https://institute-backend.azurewebsites.net", 
 });
 
 instance.interceptors.request.use(

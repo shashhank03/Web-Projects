@@ -62,12 +62,12 @@ export default function CourseDetails() {
                 <table className='min-w-full border border-gray-300'>
                     <thead  className='bg-gray-300'>
                         <tr>
-                            <th className='border px-4 py-2 text-left'>Course Name</th>
-                            <th className='border px-4 py-2 text-left'>Course Code</th>
-                            <th className='border px-4 py-2 text-left'>Description</th>
-                            <th className='border px-4 py-2 text-left'>Duration</th>
-                            <th className='border px-4 py-2 text-left'>Start Date</th>
-                            {user.role==='Admin' && (<th className='border px-4 py-2 text-left'>Actions</th>)}
+                            <th className='border px-4 py-2'>Course Name</th>
+                            <th className='border px-4 py-2'>Course Code</th>
+                            <th className='border px-4 py-2'>Description</th>
+                            <th className='border px-4 py-2'>Duration</th>
+                            <th className='border px-4 py-2'>Batches</th>
+                            {user.role==='Admin' && (<th className='border px-4 py-2'>Actions</th>)}
                         </tr>
                     </thead>
                     <tbody>
@@ -77,7 +77,20 @@ export default function CourseDetails() {
                                 <td className='border px-4 py-2'>{course.course_code}</td>
                                 <td className='border px-4 py-2'>{course.description}</td>
                                 <td className='border px-4 py-2'>{course.duration}</td>
-                                <td className='border px-4 py-2'>{course.start_date?.split("T")[0]}</td>
+                                <td className='border px-4 py-2'>
+                                    {course.batches && course.batches.length > 0 ? (
+                                        <ul>
+                                            {course.batches.map(batch => (
+                                                <li key={batch.id}>
+                                                    <span className='font-semibold'>{batch.name}</span> <span className='text-xs'>({batch.status})</span><br/>
+                                                    <span className='text-xs'>Start: {batch.start_date ? batch.start_date.split("T")[0] : 'N/A'} | End: {batch.end_date ? batch.end_date.split("T")[0] : 'N/A'}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <span className='text-gray-400'>No batches</span>
+                                    )}
+                                </td>
                                 {user.role==='Admin' && (
                                     <td className='border px-4 py-2'>
                                         <div className="flex justify-center gap-2">
