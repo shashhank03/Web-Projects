@@ -35,7 +35,7 @@ export default function Header() {
                                     <button className="flex items-center bg-gray-100 rounded-full overflow-hidden transition-all duration-1000  hover:bg-gray-200 group">
                                     <img
                                         src="https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"
-                                        className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-105"
+                                        className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-120"
                                         alt="Profile"
                                     />
                                     <span className="ml-2 text-gray-700 max-w-0 opacity-0 transition-all duration-1000 group-hover:max-w-xl pr-4 group-hover:opacity-100 whitespace-nowrap">
