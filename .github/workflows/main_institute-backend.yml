@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - institute-backend
+name: Build and deploy Node.js app to Azure Web App - institute-backend-ts
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
           node-version: '22.x'
 
       - name: Install, build, and test
-        working-directory: institute-app/institute-backend
+        working-directory: institute-app/institute-backend-ts
         run: |
           npm install
           npm run build --if-present
@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: institute-app/institute-backend
+          path: institute-app/institute-backend-ts
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,9 +50,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'institute-backend'
+          app-name: 'institute-backend-ts'
           slot-name: 'Production'
           package: .
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_903B12CA433F4D739CE89E983A56D7BF }}
-
