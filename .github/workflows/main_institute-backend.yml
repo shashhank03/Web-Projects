@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - institute-backend-ts
+name: Build and deploy Node.js app to Azure Web App - institute-backend
 
 on:
   push:
@@ -50,8 +50,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'institute-backend-ts'
+          app-name: 'institute-backend'   # 👈 keep the original app name
           slot-name: 'Production'
           package: .
-
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_903B12CA433F4D739CE89E983A56D7BF }}
